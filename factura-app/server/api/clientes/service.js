@@ -1,3 +1,5 @@
+const basedatos = require("../../database/connection");
+const { ObjectId } = require("mongodb");
 const modelClientes = require("./model"); // Asegúrate de que la ruta al modelo sea correcta
 
 // Función para manejar errores
@@ -37,7 +39,17 @@ async function obtenerCliente(id) {
   } catch (error) {
     manejarError(error, `Error al buscar el cliente con id ${id}`);
   }
+};
+
+async function buscarClientes(datosCliente) {
+  try {
+    return await modelClientes.obtenerTodosClientes(datosCliente);
+  } catch (error) {
+    manejarError(error, "Error al obtener clientes por nombre");
+  }
 }
+
+
 
 // Obtiene clientes por nombre
 async function obtenerClientesPorNombre(nombre) {
@@ -60,18 +72,33 @@ async function obtenerClientesPorTamano() {
 // Crea un nuevo cliente
 async function crearCliente(datos) {
   try {
+    // Validar los datos
     if (!validarDatos(datos)) {
       return { mensaje: "No se puede crear cliente, no hay datos" };
     }
 
+    // Crear el cliente
     const resConsulta = await modelClientes.crearUno(datos);
-    return resConsulta && resConsulta.acknowledged
-      ? { mensaje: "Cliente creado exitosamente", datos: resConsulta.insertedId }
-      : { mensaje: "Error al crear cliente", datos };
+
+    // Verificar si la creación fue exitosa
+    if (resConsulta && resConsulta.acknowledged) {
+      const nombreCliente = datos.cliente.informacion_personal.nombre_completo;
+      console.log("Cliente", nombreCliente, "creado exitosamente:", resConsulta.insertedId);
+
+      return {
+        mensaje: `Cliente ${nombreCliente} creado exitosamente`,
+        id: resConsulta.insertedId,
+        datos: resConsulta
+      };
+    } else {
+      return { mensaje: "Error al crear cliente", datos };
+    }
   } catch (error) {
     manejarError(error, "Error al crear el cliente");
+    return { mensaje: "Error interno al crear cliente", error };
   }
 }
+
 
 // Actualiza un cliente por ID
 async function actualizarCliente(id, datos) {
@@ -116,4 +143,5 @@ module.exports = {
   crearCliente,
   actualizarCliente,
   eliminarCliente,
+  buscarClientes,
 };

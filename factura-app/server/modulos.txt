@@ -1,0 +1,44 @@
+ Proveedores
+Registro de proveedores: Información de proveedores, productos que suministran, condiciones de compra.
+Historial de compras: Relación de transacciones, pagos y vencimientos.
+Pedidos de compra: Creación y seguimiento de pedidos a proveedores.
+4. Gestión de Inventarios
+Control de inventario: Gestión de stock de productos terminados y materias primas (lácteos, empaques, etc.).
+Mínimos y máximos: Alertas de productos en niveles bajos o sobrestock.
+Movimientos de inventario: Registro de entradas y salidas de productos, devoluciones, ajuste de inventarios.
+Lotes y vencimientos: Para productos perecederos como los lácteos, es importante rastrear lotes y fechas de caducidad.
+5. Cartera
+Gestión de cuentas por cobrar: Relación de facturas pendientes de pago por parte de clientes, fechas de vencimiento.
+Pagos recibidos: Registro de pagos, abonos y conciliaciones con facturas.
+Estados de cuenta: Informes detallados de la situación de cada cliente.
+Políticas de crédito: Configurar reglas sobre créditos otorgados a los clientes.
+6. Facturación
+Facturas de venta: Creación y gestión de facturas, facturación manual y automática.
+Historial de facturación: Consultar el historial de facturas emitidas.
+Tipos de factura: Soporte para diferentes tipos de facturas (electrónicas, por cliente, por proveedor).
+Impuestos: Implementación de IVA u otros impuestos aplicables.
+7. Compras
+Órdenes de compra: Creación y seguimiento de órdenes a proveedores.
+Recepción de mercancía: Confirmación de entrada de productos y actualización de inventario.
+Pagos a proveedores: Registro de pagos realizados y conciliación con facturas de compra.
+8. Producción (opcional si la empresa produce lácteos internamente)
+Control de procesos de producción: Planificación de la producción (por ejemplo, lotes de queso o mantequilla).
+Gestión de materias primas: Consumo de materias primas en el proceso de producción y registro de productos terminados.
+Costos de producción: Control de los costos asociados a la producción de cada lote.
+9. Reportes
+Reportes financieros: Estados financieros, flujo de caja, cuentas por cobrar/pagar.
+Reportes de ventas: Ventas por producto, por cliente, por región.
+Reportes de inventario: Informes de stock actual, movimientos, productos más vendidos o menos movidos.
+Reportes de producción: Costos, rendimientos, tiempos de producción (en caso de tener módulo de producción).
+10. Logística y Distribución
+Gestión de entregas: Planificación y control de envíos y entregas.
+Seguimiento de envíos: Tracking de las entregas, control de transportistas y rutas.
+11. Gastos Operativos
+Control de gastos: Registro de gastos operativos (energía, transporte, salarios, etc.).
+Análisis de costos: Informes sobre el impacto de los gastos en la rentabilidad.
+12. Módulo de Nómina
+Gestión de empleados: Registro de empleados, roles, salarios.
+Cálculo de nómina: Procesos de pago, deducciones y bonificaciones.
+13. Configuración
+Impuestos: Configuración de impuestos, tasas y otros ajustes que se apliquen a ventas, compras, y producción.
+Moneda y tipo de cambio: Configuración de monedas y tipos de cambio para transacciones internacionales.

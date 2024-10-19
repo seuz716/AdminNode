@@ -27,6 +27,7 @@ const configurarMiddleware = () => {
 const configurarRutas = () => {
     app.use("/api/usuarios", controladorUsuarios);  // Esto debe ser un router válido
     app.use("/api/clientes", controladorClientes);
+    app.use("/api/proveedores", controladorProveedores);
 };
 
 const manejarErrores = (err, req, res, next) => {

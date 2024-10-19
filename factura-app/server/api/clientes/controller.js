@@ -45,32 +45,34 @@ controladorClientes.get("/obtenerCliente/:id",
     }
 });
 
-controladorClientes.get("/obtenerClientesPorNombre/:nombre", async function (req, res, next) {
-  let nombre = req.params.nombre;
-  try {
-    let clientes = await serviceClientes.obtenerClientesPorNombre(nombre);
-    enviarRespuesta(res, "Clientes encontrados", clientes);
-  } catch (error) {
-    next(error);
-  }
+controladorClientes.get("/obtenerClientesPorNombreYNit/:nombre?/:nit?", async function (req, res, next) {
+    try {
+        const { nombre, nit } = req.params; // Acceder a los parámetros de la URL
+        let datosCliente = {
+            "cliente.informacion_personal.nombre_completo": nombre || "", // Cambiado para reflejar la estructura anidada
+            "cliente.informacion_personal.numero_identificacion": nit || "", // Cambiado para reflejar la estructura anidada
+        };
+        
+        let resultado = await serviceClientes.buscarClientes(datosCliente);
+        res.status(200).send({ resultado }); // Cambiado a 200 para GET
+    } catch (error) {
+        console.error("Error al consultar el Cliente:", error);
+        res.status(400).send({ mensaje: error.message });
+    }
 });
 
-controladorClientes.post("/crearCliente",
-  [
-    body("nombre").isString().notEmpty(),
-    body("email").isEmail(),
-  ],
-  async function (req, res, next) {
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-      return res.status(400).send({ errores: errores.array() });
-    }
-    let datos = req.body;
+
+
+
+// Ruta para crear un nuevo Cliente
+controladorClientes.post("/crearCliente", async function (req, res) {
     try {
-      let resultado = await serviceClientes.crearCliente(datos);
-      enviarRespuesta(res, resultado.mensaje, resultado.datos);
+        let datosCliente = req.body;
+        let resultado = await serviceClientes.crearCliente(datosCliente);
+        res.status(201).send({ resultado });
     } catch (error) {
-      next(error);
+        console.error("Error al crear el Cliente:", error);
+        res.status(400).send({ mensaje: error.message });
     }
 });
 

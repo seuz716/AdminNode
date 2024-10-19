@@ -6,11 +6,17 @@ async function findAll() {
   try {
     const db = basedatos.obtenerConexion();
     const clientes = await db.collection("clientes").find({}).toArray();
+
+    if (clientes.length === 0) {
+      console.log("No se encontraron clientes.");
+      return [];
+    }
+
     console.log("Clientes encontrados:", clientes.length);
     return clientes;
   } catch (error) {
     console.error("Error al obtener todos los clientes:", error);
-    throw error; // Re-lanzar el error para que pueda ser manejado en otro lugar si es necesario
+    throw new Error("Error al obtener los clientes.");
   }
 }
 
@@ -18,18 +24,51 @@ async function findAll() {
 async function findOne(id) {
   try {
     const db = basedatos.obtenerConexion();
-    const cliente = await db.collection("clientes").findOne({ _id: ObjectId(id) });
-    if (!cliente) {
-      console.log(`Cliente con id ${id} no encontrado`);
+
+    // Verifica que el id sea un ObjectId válido antes de intentar buscar
+    if (!ObjectId.isValid(id)) {
+      console.log(`ID inválido: ${id}`);
       return null;
     }
-    console.log(`Cliente encontrado:`, cliente);
+
+    const cliente = await db.collection("clientes").findOne({ _id: new ObjectId(id) });
+
+    if (!cliente) {
+      console.log(`Cliente con id ${id} no encontrado.`);
+      return null;
+    }
+
+    console.log("Cliente encontrado:", cliente);
     return cliente;
   } catch (error) {
     console.error(`Error al buscar el cliente con id ${id}:`, error);
+    throw new Error("Error al buscar el cliente.");
+  }
+}
+
+
+async function obtenerTodosClientes(datosCliente) {
+  try {
+    const db = basedatos.obtenerConexion();
+    
+    // Construir el filtro basado en los datos proporcionados
+    const filtro = {};
+    if (datosCliente.nombre_completo) {
+      filtro["informacion_personal.nombre_completo"] = { $regex: new RegExp(datosCliente.nombre_completo, "i") }; // Usa el nombre completo
+    }
+    if (datosCliente.numero_identificacion) {
+      filtro["informacion_personal.numero_identificacion"] = datosCliente.numero_identificacion; // Busca por 'numero_identificacion'
+    }
+
+    const clientes = await db.collection("clientes").find(filtro).toArray(); // Filtrar directamente en la consulta
+
+    return clientes;
+  } catch (error) {
+    console.error("Error al obtener todos los clientes:", error);
     throw error;
   }
 }
+
 
 // Función para obtener clientes por nombre
 async function obtenerPorNombre(nombre) {
@@ -37,8 +76,9 @@ async function obtenerPorNombre(nombre) {
     const db = basedatos.obtenerConexion();
     const clientes = await db
       .collection("clientes")
-      .find({ name: new RegExp(nombre, "i") })
+      .find({ "informacion_personal.nombre_completo": new RegExp(nombre, "i") }) // Asegurarte de que estás buscando en el campo correcto
       .toArray();
+
     console.log(`Clientes encontrados con el nombre ${nombre}:`, clientes.length);
     return clientes;
   } catch (error) {
@@ -70,13 +110,16 @@ async function crearUno(datos) {
   try {
     const db = basedatos.obtenerConexion();
     const resultado = await db.collection("clientes").insertOne(datos);
-    console.log("Cliente creado exitosamente:", resultado.insertedId);
+    const nombreCliente = datos.cliente.informacion_personal.nombre_completo;
+    console.log("Cliente", nombreCliente, "creado exitosamente:", resultado.insertedId);
     return resultado;
   } catch (error) {
     console.error("Error al crear un cliente:", error);
     throw error;
   }
 }
+
+
 
 // Función para actualizar un cliente por ID
 async function actualizarUna(id, datos) {
@@ -120,4 +163,6 @@ module.exports = {
   crearUno,
   actualizarUna,
   eliminarUna,
+  obtenerTodosClientes,
+
 };
